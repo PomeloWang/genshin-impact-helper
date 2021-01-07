@@ -146,6 +146,35 @@ Error: Process completed with exit code 255.
 
 </details>
 
+## 🔔订阅
+
+#### 若开启订阅推送，无论成功与否，都会收到微信通知。
+
+- 使用 GitHub 登录 [sc.ftqq.com](http://sc.ftqq.com/?c=github&a=login) 创建账号
+- 点击「[发送消息](http://sc.ftqq.com/?c=code)」，获取`SCKEY`
+- 点击「[微信推送](http://sc.ftqq.com/?c=wechat&a=bind)」，完成微信绑定
+- 建立名为`SCKEY`的 secret，并添加获取的 SCKEY 值，即可开启订阅推送
+
+#### 如果需要额外的通知渠道可以自己根据一下规则实现
+- 认证信息使用 `secret` 存储 (推荐)
+- 所有通知渠道放到`notify.py`内实现, 继承自`Sender` 类
+
+通知调用格式, `message` 为原始信息包含以下`key`
+```python
+# today             当天时间
+# region_name       区服
+# uid               UID
+# award_name        礼品
+# award_cnt         礼品数量
+# total_sign_day    签到天数
+# status            上层API返回的 messgae 字段或自定义的消息
+# end               格式化用
+
+# 在 notify.py 中按照以下签名实现自己的通知渠道即可
+def send(self, title, status, message):
+     """please implemente in subclass"""
+```
+
 ## 🔨开发
 
 如果需要重构或增加额外功能参考以下数据
@@ -189,15 +218,6 @@ infos = [
 ]
 
 ```
-## 🔔订阅
-
-若开启订阅推送，无论成功与否，都会收到微信通知。
-
-- 使用 GitHub 登录 [sc.ftqq.com](http://sc.ftqq.com/?c=github&a=login) 创建账号
-- 点击「[发送消息](http://sc.ftqq.com/?c=code)」，获取`SCKEY`
-- 点击「[微信推送](http://sc.ftqq.com/?c=wechat&a=bind)」，完成微信绑定
-- 建立名为`SCKEY`的 secret，并添加获取的 SCKEY 值，即可开启订阅推送
-
 ## ❗️协议
 
 使用 Genshin Impact Helper 即表明，您知情并同意：

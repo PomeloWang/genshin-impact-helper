@@ -8,7 +8,10 @@ import uuid
 import requests
 from requests.exceptions import *
 
+from notify import *
 from settings import *
+
+notify = Notify(notify_class=CONFIG.NOTIFY_CLASS)
 
 
 def hexdigest(text):
@@ -122,7 +125,7 @@ class Sign(Base):
 
         # role list empty
         if not role_list:
-            notify(sc_secret, '失败', user_game_roles.get('message', 'role list empty'))
+            notify.send(title="", status='失败', message=user_game_roles.get('message', 'role list empty'))
             exit(-1)
 
         log.info('当前账号绑定了 {} 个角色'.format(len(role_list)))
@@ -163,19 +166,19 @@ class Sign(Base):
                 'today': today,
                 'region_name': self._region_name_list[i],
                 'uid': uid,
-                'award_name': award[total_sign_day]['name'],
-                'award_cnt': award[total_sign_day]['cnt'],
+                'award_name': award[total_sign_day - 1]['name'],
+                'award_cnt': award[total_sign_day - 1]['cnt'],
                 'end': '',
             }
             if info_list[i]['data']['is_sign'] is True:
-                messgae['total_sign_day'] = total_sign_day + 1
+                messgae['total_sign_day'] = total_sign_day
                 messgae['status'] = "👀 旅行者 {} 号, 你已经签到过了哦".format(i + 1)
-                notify(sc_secret, "成功", self.message.format(**messgae))
+                notify.send(title="", status='成功', message=messgae)
                 continue
             if info_list[i]['data']['first_bind'] is True:
                 messgae['total_sign_day'] = total_sign_day
                 messgae['status'] = "💪 旅行者 {} 号, 请先前往米游社App手动签到一次".format(i + 1)
-                notify(sc_secret, "失败", self.message.format(**messgae))
+                notify.send(title="", status='失败', message=messgae)
                 continue
 
             data = {
@@ -200,40 +203,11 @@ class Sign(Base):
             # 0:      success
             # -5003:  already signed in
             if code != 0:
-                notify(sc_secret, "失败", response)
+                notify.send(title="", status="失败", message=response)
                 continue
             messgae['total_sign_day'] = total_sign_day + 1
             messgae['status'] = response['message']
-            notify(sc_secret, "成功", self.message.format(**messgae))
-
-    @property
-    def message(self):
-        return CONFIG.MESSGAE_TEMPLATE
-
-
-def notify(secret: str, status: str, message):
-    if isinstance(message, list) or isinstance(message, dict):
-        message = Sign.to_json(message)
-    log.info('签到{}: {}'.format(status, message))
-
-    if secret.startswith('SC'):
-        log.info('准备推送通知...')
-        url = 'https://sc.ftqq.com/{}.send'.format(secret)
-        data = {'text': '原神签到小助手 签到{}'.format(status), 'desp': message}
-        try:
-            response = Sign.to_python(requests.Session().post(url, data=data).text)
-        except Exception as e:
-            log.error(e)
-            raise HTTPError
-        else:
-            errmsg = response['errmsg']
-            if errmsg == 'success':
-                log.info('推送成功')
-            else:
-                log.error('{}: {}'.format('推送失败', response))
-    else:
-        log.info('未配置SCKEY,正在跳过推送')
-    return log.info('任务结束')
+            notify.send(title="", status="成功", message=messgae)
 
 
 if __name__ == '__main__':
