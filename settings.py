@@ -26,6 +26,7 @@ class _Config:
     SIGN_URL = 'https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign'
     USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) ' \
                  'miHoYoBBS/{}'.format(APP_VERSION)
+    NOTIFY_CLASS = os.environ.get('NotifyClass', 'ServerJiang')
 
 
 class ProductionConfig(_Config):
@@ -51,7 +52,6 @@ MESSGAE_TEMPLATE = '''
     今日奖励: {award_name} × {award_cnt}
     本月累签: {total_sign_day} 天
     签到结果: {status}
-    {end:#^30}
-'''
+    {end:#^30}'''
 
 CONFIG.MESSGAE_TEMPLATE = MESSGAE_TEMPLATE
