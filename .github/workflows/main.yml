@@ -10,6 +10,7 @@ env:
   ALLOW_MERGE: 'false'
   RUN_ENV: 'prod'
   TZ: 'Asia/Shanghai'
+  SCKEY: ${{ secrets.SCKEY }}
 
 jobs:
   build:
