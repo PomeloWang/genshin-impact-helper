@@ -6,10 +6,10 @@ Genshin Impact Helper
 ![Genshin Impact Helper](https://i.loli.net/2020/11/18/3zogEraBFtOm5nI.jpg)
 [![GitHub stars](https://img.shields.io/github/stars/y1ndan/genshin-impact-helper?style=flat-square)](https://github.com/y1ndan/genshin-impact-helper/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/y1ndan/genshin-impact-helper?style=flat-square)](https://github.com/y1ndan/genshin-impact-helper/network)
-[![GitHub issues](https://img.shields.io/github/issues/y1ndan/genshin-impact-helper?style=flat-square)](https://github.com/y1ndan/genshin-impact-helper/issues)
+[![GitHub issues](https://img.shields.io/github/issues/PomeloWang/genshin-impact-helper?style=flat-square)](https://github.com/PomeloWang/genshin-impact-helper/issues)
 [![GitHub contributors](https://img.shields.io/github/contributors/y1ndan/genshin-impact-helper?style=flat-square)](https://github.com/y1ndan/genshin-impact-helper/graphs/contributors)
 [![QQ Group](https://img.shields.io/badge/chat-130516740-0d86d7?style=flat-square)](https://qm.qq.com/cgi-bin/qm/qr?k=_M9lYFxkYD7yQQR2btyG3pkZWFys_I-l&authKey=evGDzE2eFVBm46jsHpgcWrokveg70Z9GKl3H45o0oJuia620UGeO27lDPG9gKb/2&noverify=0)
-![Github workflow status](https://img.shields.io/github/workflow/status/y1ndan/genshin-impact-helper/Genshin%20Impact%20Helper?label=status&style=flat-square)
+![Github workflow status](https://img.shields.io/github/workflow/status/PomeloWang/genshin-impact-helper/Genshin%20Impact%20Helper?label=status&style=flat-square)
 
 </div>
 
@@ -171,7 +171,7 @@ Error: Process completed with exit code 255.
 # end               格式化用
 
 # 在 notify.py 中按照以下签名实现自己的通知渠道即可
-def send(self, title, status, message):
+def send(self, title, message):
      """please implemente in subclass"""
 ```
 
@@ -180,7 +180,7 @@ def send(self, title, status, message):
 如果需要重构或增加额外功能参考以下数据
 
 ```python
-roles = Roles(cookie).get_roles()
+roles = Roles(cookie).get_role()
 roles = {
     'retcode': 0,
     'message': 'OK',
@@ -200,8 +200,9 @@ roles = {
     }
 }
 ```
+
 ```python
-infos = Sign(cookie).get_info()
+infos = Sign(cookie).get_sign_in_info()
 infos = [
     {
         'retcode': 0,
