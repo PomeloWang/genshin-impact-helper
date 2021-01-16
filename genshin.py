@@ -179,7 +179,7 @@ class GenShin(Base):
 
             payload = {
                 'act_id': CONFIG.ACT_ID,
-                'region': region_name,
+                'region': sign_in_info['region'],
                 'uid': uid
             }
 
@@ -215,7 +215,7 @@ if __name__ == '__main__':
         exit(0)
 
     cookie_list = os.environ['COOKIE'].split('#')
-    for ck in cookie_list:
+    for idx, ck in enumerate(cookie_list):
         try:
             sign_in_results = GenShin(cookie=ck).sign()
             msg = f"\n\t签到汇总: 成功({sign_in_results['succ']}) 失败({sign_in_results['fail']}) 已经签到({sign_in_results['is_sign']})"
@@ -226,7 +226,8 @@ if __name__ == '__main__':
             else:
                 notify.send(title="原神签到小助手签到成功", message=msg)
         except Exception as e:
+            log.error(f"第{idx + 1}个账号签到失败, err: {str(e)}")
             notify.send(title="原神签到小助手签到失败", message={
-                'msg': "请前往执行日志查看详情",
+                'msg': f"第{idx + 1}个账号签到失败, 请前往执行日志查看详情",
                 'err': str(e),
             })
