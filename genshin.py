@@ -144,24 +144,23 @@ class GenShin(Base):
             region_name = sign_in_info['region_name']
             uid = sign_in_info['uid']
             award_list = self.get_awards()['data']['awards']
-            award_idx = total_sign_day - 1
-
-            if total_sign_day == 0:
-                award_idx = total_sign_day
 
             sii = {
                 'today': today,
                 'region_name': region_name,
                 'uid': uid[:int(len(uid)/2.0)] + '***' + uid[-int(len(uid)/2.0):],
-                'award_name': award_list[award_idx]['name'],
-                'award_cnt': award_list[award_idx]['cnt'],
+                'award_name': award_list[total_sign_day]['name'],
+                'award_cnt': award_list[total_sign_day]['cnt'],
                 'total_sign_day': total_sign_day,
                 'end': '',
             }
+
             if sign_in_info['data']['is_sign'] is True:
                 sii.update({
                     'status': f"👀 旅行者 {sii['uid']}, 你已经签到过了哦",
-                    'sign_in_status': 'is_sign'
+                    'sign_in_status': 'is_sign',
+                    'award_name': award_list[total_sign_day - 1]['name'],
+                    'award_cnt': award_list[total_sign_day - 1]['cnt'],
                 })
                 log.info("签到成功 {}".format(CONFIG.MESSGAE_TEMPLATE.format(**sii)))
                 _sign_in_results['list'].append(sii)
@@ -170,7 +169,9 @@ class GenShin(Base):
             if sign_in_info['data']['first_bind'] is True:
                 sii.update({
                     'status': f"💪 旅行者 {sii[uid]}, 请先前往米游社App手动签到一次",
-                    'sign_in_status': 'fail'
+                    'sign_in_status': 'fail',
+                    'award_name': award_list[total_sign_day - 1]['name'],
+                    'award_cnt': award_list[total_sign_day - 1]['cnt'],
                 })
                 log.info("签到失败 {}".format(CONFIG.MESSGAE_TEMPLATE.format(**sii)))
                 _sign_in_results['list'].append(sii)
